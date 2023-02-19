@@ -7,7 +7,7 @@ public class Pocket {
     private static final int XSIZE = 50;
     private static final int YSIZE = 50;
     private int x = 0;
-    private int y= 0;
+    private int y = 0;
 
     public Pocket(Component c, int x, int y){
         this.canvas = c;

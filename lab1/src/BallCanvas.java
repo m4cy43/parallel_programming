@@ -10,6 +10,7 @@ public class BallCanvas extends JPanel {
         this.balls.add(b);
     }
     public void remove(Ball b){
+        Score.inc();
         this.balls.remove(b);
     }
     public void add(Pocket p){

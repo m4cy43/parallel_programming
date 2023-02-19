@@ -7,7 +7,7 @@ public class Ball {
     private static final int XSIZE = 20;
     private static final int YSIZE = 20;
     private int x = 0;
-    private int y= 0;
+    private int y = 0;
     private int dx = 2;
     private int dy = 2;
     public boolean isPocked = false;
