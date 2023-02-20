@@ -10,6 +10,7 @@ public class BallThread extends Thread {
             for(int i=1; i<10000; i++){
                 b.move();
 
+                // block the thread
                 if (b.isPocked) {
                     break;
                 }

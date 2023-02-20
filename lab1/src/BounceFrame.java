@@ -9,9 +9,10 @@ public class BounceFrame extends JFrame {
     public static final int HEIGHT = 350;
     public BounceFrame() {
         this.setSize(WIDTH, HEIGHT);
-        this.setTitle("Bounce programm");
+        this.setTitle("Bounce program");
         this.canvas = new BallCanvas();
 
+        // 4 pockets on the corners of canvas
         Pocket p1 = new Pocket(canvas, 0, 0);
         canvas.add(p1);
         Pocket p2 = new Pocket(canvas, WIDTH-60, 0);
@@ -27,8 +28,10 @@ public class BounceFrame extends JFrame {
         content.add(this.canvas, BorderLayout.CENTER);
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.lightGray);
-        JButton buttonStart = new JButton("Start");
-        JButton buttonStop = new JButton("Stop");
+        JButton buttonStart = new JButton("Add one");
+        JButton buttonStop = new JButton("Exit");
+
+        // score
         JLabel labelScore = new JLabel("Balls in pockets: " + Score.get());
         buttonStart.addActionListener(new ActionListener() {
             @Override
@@ -48,6 +51,7 @@ public class BounceFrame extends JFrame {
                 System.exit(0);
             }
         });
+        // score listener, as those above
         Score.addScoreListener(new ScoreListener() {
             @Override
             public void actionPerformed() {

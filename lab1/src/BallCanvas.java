@@ -28,6 +28,7 @@ public class BallCanvas extends JPanel {
             Ball b = balls.get(i);
             for(int j=0; j<pockets.size(); j++){
                 Pocket p = pockets.get(j);
+                // ball in the pocket
                 if (b.hitThePocket(p)){
                     b.isPocked = true;
                     remove(b);

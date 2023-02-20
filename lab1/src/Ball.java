@@ -11,6 +11,7 @@ public class Ball {
     private int dx = 2;
     private int dy = 2;
     public boolean isPocked = false;
+    public Color color = Color.darkGray; // default
 
     public Ball(Component c){
         this.canvas = c;
@@ -24,8 +25,17 @@ public class Ball {
         }
     }
 
+    // for blue and red balls
+    public Ball(Component c, Color color, int x, int y) {
+        this.canvas = c;
+        this.color = color;
+
+        this.x = x;
+        this.y = y;
+    }
+
     public void draw (Graphics2D g2){
-        g2.setColor(Color.darkGray);
+        g2.setColor(this.color);
         g2.fill(new Ellipse2D.Double(x,y,XSIZE,YSIZE));
     }
 
@@ -53,8 +63,8 @@ public class Ball {
 
     public boolean hitThePocket(Pocket pocket) {
         // the formula for the distance between two points (centers of circles)
-        double distance = Math.sqrt(Math.pow((pocket.getX()+pocket.getSize()/2) - (this.x+this.XSIZE/2), 2)
-                + Math.pow((pocket.getY()+pocket.getSize()/2) - (this.y+this.YSIZE/2), 2));
+        double distance = Formulas.TwoPointsDistance((pocket.getX()+pocket.getSize()/2),
+                (this.x+this.XSIZE/2),(pocket.getY()+pocket.getSize()/2),(this.y+this.YSIZE/2));
         boolean isInPocket = (distance + this.XSIZE/2) < (pocket.getSize()/2);
         return isInPocket;
     }

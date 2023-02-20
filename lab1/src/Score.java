@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Score {
+    // score counter
     private static int score = 0;
     public static void inc() {
         Score.score += 1;
