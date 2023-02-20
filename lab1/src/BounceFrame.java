@@ -5,8 +5,8 @@ import java.awt.event.ActionListener;
 
 public class BounceFrame extends JFrame {
     private BallCanvas canvas;
-    public static final int WIDTH = 450;
-    public static final int HEIGHT = 350;
+    public static final int WIDTH = 500;
+    public static final int HEIGHT = 500;
     public BounceFrame() {
         this.setSize(WIDTH, HEIGHT);
         this.setTitle("Bounce program");
@@ -31,6 +31,7 @@ public class BounceFrame extends JFrame {
         JButton buttonStart = new JButton("Grey");
         JButton buttonRed = new JButton("Red");
         JButton buttonBlue = new JButton("Blue");
+        JButton buttonSnake = new JButton("Snake");
         JButton buttonStop = new JButton("Exit");
 
 
@@ -51,6 +52,7 @@ public class BounceFrame extends JFrame {
         buttonStop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println("👋");
                 System.exit(0);
             }
         });
@@ -67,37 +69,61 @@ public class BounceFrame extends JFrame {
         buttonRed.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Ball b = new Ball(canvas, Color.RED);
-                canvas.add(b);
-
-                BallThread thread = new BallThread(b);
-                thread.setPriority(Thread.MAX_PRIORITY);
-                thread.start();
-                System.out.println("Thread name = " +
-                        thread.getName());
+                newBallRandom(Color.RED, Thread.MAX_PRIORITY);
             }
         });
         // blue - min priority
         buttonBlue.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Ball b = new Ball(canvas, Color.BLUE);
-                canvas.add(b);
-
-                BallThread thread = new BallThread(b);
-                thread.setPriority(Thread.MIN_PRIORITY);
-                thread.start();
-                System.out.println("Thread name = " +
-                        thread.getName());
+                newBallRandom(Color.BLUE, Thread.MIN_PRIORITY);
+            }
+        });
+        // red n blue experiment, snake shape
+        buttonSnake.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (int i = 0; i < 800; i++){
+                    newBallFixed(Color.BLUE, Thread.MIN_PRIORITY, 0,50);
+                }
+//                for (int i = 0; i < 5; i++){
+//                    newBallFixed(Color.RED, Thread.MAX_PRIORITY, 60,60);
+//                }
+                // one ball
+                // at the tail of the snake
+                newBallFixed(Color.RED, Thread.MAX_PRIORITY, 0, 50);
             }
         });
 
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonRed);
         buttonPanel.add(buttonBlue);
+        buttonPanel.add(buttonSnake);
         buttonPanel.add(buttonStop);
         buttonPanel.add(labelScore);
 
         content.add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    // DRY is for losers 👻
+    public void newBallRandom(Color color, int prior) {
+        Ball b = new Ball(canvas, color);
+        canvas.add(b);
+
+        BallThread thread = new BallThread(b);
+        thread.setPriority(prior);
+        thread.start();
+        System.out.println("Thread name = " +
+                thread.getName());
+    }
+    public void newBallFixed(Color color, int prior, int x, int y) {
+        Ball b = new Ball(canvas, color, x, y);
+        canvas.add(b);
+
+        BallThread thread = new BallThread(b);
+        thread.setPriority(prior);
+        thread.start();
+        System.out.println("Thread name = " +
+                thread.getName());
     }
 }
