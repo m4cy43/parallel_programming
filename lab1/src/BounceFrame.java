@@ -28,8 +28,11 @@ public class BounceFrame extends JFrame {
         content.add(this.canvas, BorderLayout.CENTER);
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.lightGray);
-        JButton buttonStart = new JButton("Add one");
+        JButton buttonStart = new JButton("Grey");
+        JButton buttonRed = new JButton("Red");
+        JButton buttonBlue = new JButton("Blue");
         JButton buttonStop = new JButton("Exit");
+
 
         // score
         JLabel labelScore = new JLabel("Balls in pockets: " + Score.get());
@@ -59,8 +62,39 @@ public class BounceFrame extends JFrame {
                 labelScore.repaint();
             }
         });
+        // red and blue balls
+        // red - max priority
+        buttonRed.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Ball b = new Ball(canvas, Color.RED);
+                canvas.add(b);
+
+                BallThread thread = new BallThread(b);
+                thread.setPriority(Thread.MAX_PRIORITY);
+                thread.start();
+                System.out.println("Thread name = " +
+                        thread.getName());
+            }
+        });
+        // blue - min priority
+        buttonBlue.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Ball b = new Ball(canvas, Color.BLUE);
+                canvas.add(b);
+
+                BallThread thread = new BallThread(b);
+                thread.setPriority(Thread.MIN_PRIORITY);
+                thread.start();
+                System.out.println("Thread name = " +
+                        thread.getName());
+            }
+        });
 
         buttonPanel.add(buttonStart);
+        buttonPanel.add(buttonRed);
+        buttonPanel.add(buttonBlue);
         buttonPanel.add(buttonStop);
         buttonPanel.add(labelScore);
 

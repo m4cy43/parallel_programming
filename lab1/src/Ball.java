@@ -25,7 +25,20 @@ public class Ball {
         }
     }
 
-    // for blue and red balls
+    // for blue and red balls, random start pos
+    public Ball(Component c, Color color) {
+        this.canvas = c;
+        this.color = color;
+
+        if(Math.random()<0.5){
+            x = new Random().nextInt(this.canvas.getWidth());
+            y = 50;
+        }else{
+            x = 50;
+            y = new Random().nextInt(this.canvas.getHeight());
+        }
+    }
+    // for blue and red balls fix start pos
     public Ball(Component c, Color color, int x, int y) {
         this.canvas = c;
         this.color = color;
