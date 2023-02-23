@@ -28,15 +28,16 @@ public class BounceFrame extends JFrame {
         content.add(this.canvas, BorderLayout.CENTER);
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.lightGray);
-        JButton buttonStart = new JButton("Grey");
-        JButton buttonRed = new JButton("Red");
-        JButton buttonBlue = new JButton("Blue");
+        JButton buttonStart = new JButton("G");
+        JButton buttonRed = new JButton("R");
+        JButton buttonBlue = new JButton("B");
         JButton buttonSnake = new JButton("Snake");
-        JButton buttonStop = new JButton("Exit");
+        JButton buttonJoin = new JButton("Join");
+        JButton buttonStop = new JButton("X");
 
 
         // score
-        JLabel labelScore = new JLabel("Balls in pockets: " + Score.get());
+        JLabel labelScore = new JLabel("In pockets: " + Score.get());
         buttonStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -94,11 +95,32 @@ public class BounceFrame extends JFrame {
                 newBallFixed(Color.RED, Thread.MAX_PRIORITY, 0, 50);
             }
         });
+        // join experiment
+        buttonJoin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // interface
+                Runnable run = new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < 4; i++) {
+                            // blue -> red -> blue -> red
+                            Color color = (i % 2 == 0) ? Color.BLUE : Color.RED;
+                            newBallFixed(color, Thread.NORM_PRIORITY, 50, 50, 500);
+                        }
+                    }
+                };
+                // Thread takes runnable task
+                Thread thread = new Thread(run);
+                thread.start();
+            }
+        });
 
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonRed);
         buttonPanel.add(buttonBlue);
         buttonPanel.add(buttonSnake);
+        buttonPanel.add(buttonJoin);
         buttonPanel.add(buttonStop);
         buttonPanel.add(labelScore);
 
@@ -123,6 +145,20 @@ public class BounceFrame extends JFrame {
         BallThread thread = new BallThread(b);
         thread.setPriority(prior);
         thread.start();
+        System.out.println("Thread name = " +
+                thread.getName());
+    }
+    public void newBallFixed(Color color, int prior, int x, int y, int iterations) {
+        Ball b = new Ball(canvas, color, x, y);
+        canvas.add(b);
+
+        BallThread thread = new BallThread(b);
+        // ball life-time
+        thread.setIterations(iterations);
+        thread.setPriority(prior);
+        thread.start();
+        // content action solution (join throws InterruptedException)
+        try { thread.join(); } catch (InterruptedException e) { throw new RuntimeException(e); }
         System.out.println("Thread name = " +
                 thread.getName());
     }
