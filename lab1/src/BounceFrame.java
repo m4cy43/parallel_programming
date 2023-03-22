@@ -84,7 +84,7 @@ public class BounceFrame extends JFrame {
         buttonSnake.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (int i = 0; i < 800; i++){
+                    for (int i = 0; i < 1000; i++){
                     newBallFixed(Color.BLUE, Thread.MIN_PRIORITY, 0,50);
                 }
 //                for (int i = 0; i < 5; i++){
