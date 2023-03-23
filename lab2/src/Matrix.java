@@ -1,10 +1,10 @@
 public class Matrix {
     public double[][] matrix;
-    private int sizeX;
+    private final int sizeX;
     public int getSizeX(){
         return this.sizeX;
     }
-    private int sizeY;
+    private final int sizeY;
     public int getSizeY(){
         return this.sizeY;
     }
@@ -13,20 +13,12 @@ public class Matrix {
         this.sizeY = Y;
         this.matrix = new double[X][Y];
     }
-    public void randomMatrixFilling() {
-        for (int x = 0; x < this.sizeX; x++) {
-            for (int y = 0; y < this.sizeY; y++) {
-                this.matrix[x][y] = Math.random();
-            }
-        }
-    }
 
-    public void printMatrix() {
-        for (int x = 0; x < this.sizeX; x++) {
-            for (int y = 0; y < this.sizeY; y++) {
-                System.out.printf("%7.2f", this.matrix[x][y]);
+    public void randomMatrixFilling(int maxValue) {
+        for (int x = 0; x < sizeX; x++) {
+            for (int y = 0; y < sizeY; y++) {
+                matrix[x][y] = Math.random() * maxValue;
             }
-            System.out.println();
         }
     }
 }
