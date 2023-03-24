@@ -25,6 +25,8 @@ public class Result {
         }
     }
     public void printfTime(String algName) {
+        System.out.println();
         System.out.println(algName+" algorithm calculation speed: "+calculationTime+" ms");
+        System.out.println();
     }
 }
