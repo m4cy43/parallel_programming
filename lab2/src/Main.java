@@ -9,14 +9,15 @@ public class Main {
         Matrix m2 = new Matrix(X_SIZE,Y_SIZE);
         m2.randomMatrixFilling(MAX_RANDOM_VALUE);
 
+        int threadNum = Runtime.getRuntime().availableProcessors();
+        FoxAlgorithm FoxAlg = new FoxAlgorithm(m1,m2,threadNum);
+        Result resFoxAlg = FoxAlg.multiplyMatrix();
+        resFoxAlg.printfMatrix(STRING_FORMAT);
+        resFoxAlg.printfTime("Fox");
+
         StripedAlgorithm stripAlg = new StripedAlgorithm(m1,m2);
         Result resStripAlg = stripAlg.multiplyMatrix();
         resStripAlg.printfMatrix(STRING_FORMAT);
         resStripAlg.printfTime("Striped");
-
-        StripedAlgorithm FoxAlg = new StripedAlgorithm(m1,m2);
-        Result resFoxAlg = FoxAlg.multiplyMatrix();
-        resFoxAlg.printfMatrix(STRING_FORMAT);
-        resFoxAlg.printfTime("Fox");
     }
 }

@@ -14,23 +14,50 @@ public class FoxAlgorithm {
 
     public Result multiplyMatrix(){
         Matrix resultMatrix = new Matrix(aMatrix.getSizeX(), bMatrix.getSizeY());
-        int stepSize = aMatrix.getSizeX() / Help.nearestDivisor(threadNum, aMatrix.getSizeX());
+        // if threadNum is greater than matrix size (for small matrices)
         threadNum = threadNum < aMatrix.getSizeX() ? threadNum : aMatrix.getSizeX();
+        // to divide into equal numbers
+        threadNum = Help.nearestDivisor(threadNum, aMatrix.getSizeX());
+        int stepSize = aMatrix.getSizeX() / threadNum;
+
         ExecutorService execPool = Executors.newFixedThreadPool(threadNum);
         long timestamp0 = System.nanoTime();
-        int stepX = 0;
-        int stepY = 0;
+
+        // Maps of sizes for matrices A and B
+        int[][] sizesX = new int[threadNum][threadNum];
+        int[][] sizesY = new int[threadNum][threadNum];
         for (int x = 0; x < threadNum; x++) {
             for (int y = 0; y < threadNum; y++) {
-                stepX = stepSize * x;
-                stepY = stepSize * y;
-                FoxThread thread = new FoxThread(
-                        getBlock(aMatrix, stepX, stepY, stepSize),
-                        getBlock(bMatrix, stepY, stepX, stepSize),
-                        stepX, stepY, resultMatrix);
-                execPool.execute(thread);
+                sizesX[x][y] = stepSize * x;
+                sizesY[x][y] = stepSize * y;
             }
         }
+
+        // Shift the submatrices of A and B cyclically to the right and bottom,
+        // respectively, so that each processor receives
+        // a new submatrix of A and B for the next iteration.
+        for (int move = 0; move < threadNum; move++) {
+            for (int x = 0; x < threadNum; x++) {
+                for (int y = 0; y < threadNum; y++) {
+                    // (x + move) % threadNum ---> shift
+                    // x + move ---> for sync shift in both submatrices (cyclically and in appropriate dir)
+                    // x + move < threadNum ---> (x + move)
+                    // x + move > threadNum ---> threadNum - (x + move)
+                    int aShiftIndexX = sizesX[x][(x + move) % threadNum];
+                    int aShiftIndexY = sizesY[x][(x + move) % threadNum];
+
+                    int bShiftIndexX = sizesX[(x + move) % threadNum][y];
+                    int bShiftIndexY = sizesY[(x + move) % threadNum][y];
+                    FoxThread thread = new FoxThread(
+                        getBlock(aMatrix, aShiftIndexX, aShiftIndexY, stepSize),
+                        getBlock(bMatrix, bShiftIndexX, bShiftIndexY, stepSize),
+                        sizesX[x][y], sizesY[x][y], resultMatrix
+                    );
+                    execPool.execute(thread);
+                }
+            }
+        }
+
         execPool.shutdown();
         try {
             execPool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
@@ -70,6 +97,7 @@ class FoxThread extends Thread {
         for (int x = 0; x < aMatrix.getSizeX(); x++) {
             for (int y = 0; y < bMatrix.getSizeY(); y++) {
                 for (int i = 0; i < bMatrix.getSizeX(); i++) {
+                    // multiply in submatrices and write to result matrix
                     resultMatrix.matrix[x + stepX][y + stepY] += aMatrix.matrix[x][i] * bMatrix.matrix[i][y];
                 }
             }
