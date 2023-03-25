@@ -20,6 +20,7 @@ public class FoxAlgorithm {
         threadNum = Help.nearestDivisor(threadNum, aMatrix.getSizeX());
         int stepSize = aMatrix.getSizeX() / threadNum;
 
+        // we don't need "future-list", if we can execute threads immediately
         ExecutorService execPool = Executors.newFixedThreadPool(threadNum);
         long timestamp0 = System.nanoTime();
 
@@ -53,6 +54,7 @@ public class FoxAlgorithm {
                         getBlock(bMatrix, bShiftIndexX, bShiftIndexY, stepSize),
                         sizesX[x][y], sizesY[x][y], resultMatrix
                     );
+                    // immediately execute
                     execPool.execute(thread);
                 }
             }

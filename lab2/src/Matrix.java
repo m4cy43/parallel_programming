@@ -17,6 +17,7 @@ public class Matrix {
     public void randomMatrixFilling(int maxValue) {
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
+                // JavaScript style
                 matrix[x][y] = Math.random() * maxValue;
             }
         }
