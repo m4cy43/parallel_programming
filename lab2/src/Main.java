@@ -5,8 +5,8 @@ public class Main {
     private static final String STRING_FORMAT = "%7.2f";
     public static void main(String[] args) {
         testAllAlgorithms();
-        //differentSizes();
-
+//        differentSizes();
+//        differentThreads();
     }
 
     static void testAllAlgorithms (){
@@ -15,6 +15,8 @@ public class Main {
         Matrix m2 = new Matrix(X_SIZE,Y_SIZE);
         m2.randomMatrixFilling(MAX_RANDOM_VALUE);
         int threadNum = Runtime.getRuntime().availableProcessors();
+
+        System.out.println(X_SIZE+"x"+Y_SIZE+":");
 
         StripedAlgorithm stripAlg = new StripedAlgorithm(m1,m2);
         Result resStripAlg = stripAlg.multiplyMatrix();
@@ -62,6 +64,26 @@ public class Main {
     }
 
     static void differentThreads(){
+        Matrix m1 = new Matrix(X_SIZE,Y_SIZE);
+        m1.randomMatrixFilling(MAX_RANDOM_VALUE);
+        Matrix m2 = new Matrix(X_SIZE,Y_SIZE);
+        m2.randomMatrixFilling(MAX_RANDOM_VALUE);
+        int[] threadsSet = {5, 10, 25, 50, 75, 100};
 
+        for (int threadNum:
+                threadsSet) {
+            StripedAlgorithm stripAlgThread = new StripedAlgorithm(m1,m2,threadNum);
+            Result resStripAlgThread = stripAlgThread.multiplyMatrixFixedThreads();
+            System.out.println(threadNum+" threads:");
+            resStripAlgThread.printfTime("Striped thread");
+        }
+
+        for (int threadNum:
+                threadsSet) {
+            FoxAlgorithm FoxAlg = new FoxAlgorithm(m1,m2,threadNum);
+            Result resFoxAlg = FoxAlg.multiplyMatrix();
+            System.out.println(threadNum+" threads:");
+            resFoxAlg.printfTime("Fox");
+        }
     }
 }
