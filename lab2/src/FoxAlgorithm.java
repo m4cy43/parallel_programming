@@ -34,7 +34,7 @@ public class FoxAlgorithm {
             }
         }
 
-        // Shift the submatrices of A and B cyclically to the right and bottom,
+        // Shift the submatrices of A and B cyclically to the left and up,
         // respectively, so that each processor receives
         // a new submatrix of A and B for the next iteration.
         for (int move = 0; move < threadNum; move++) {
