@@ -9,6 +9,7 @@ public class Normal {
     public Result multiplyMatrix() {
         Matrix resultMatrix = new Matrix(aMatrix.getSizeX(), bMatrix.getSizeY());
         long timestamp0 = System.nanoTime();
+
         for (int x = 0; x < aMatrix.getSizeX(); x++) {
             for (int y = 0; y < bMatrix.getSizeY(); y++) {
                 for (int i = 0; i < aMatrix.getSizeY(); i++) {
@@ -16,6 +17,7 @@ public class Normal {
                 }
             }
         }
+
         long timestamp1 = System.nanoTime();
         return new Result(resultMatrix, ((timestamp1-timestamp0)/1000000));
     }
