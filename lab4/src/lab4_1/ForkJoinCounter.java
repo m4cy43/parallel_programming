@@ -10,7 +10,7 @@ import java.util.concurrent.RecursiveTask;
 public class ForkJoinCounter extends RecursiveTask<HashMap<String, Integer>> {
     private final HashMap<String, Integer> dictionary;
     private final List<String> words;
-    private final int limit = 20000;
+    private final int limit = 100000;
 
     public ForkJoinCounter(List<String> wordList)  {
         this.dictionary = new HashMap<>();
