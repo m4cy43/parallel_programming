@@ -16,8 +16,8 @@ public class TeacherThread extends Thread {
         for (int i = 0; i < weeksNum; i++) {
             for (Group group: journal.getGroups()) {
                 for (Student student: group.getStudents()) {
-                    int mark = (int) Math.ceil(Math.random() * 100);
-//                    int mark = 100;
+//                    int mark = (int) Math.ceil(Math.random() * 100);
+                    int mark = 100;
                     student.setMark(mark, teacher, i + 1);
                 }
             }
