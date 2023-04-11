@@ -1,7 +1,5 @@
 package lab4_4;
 
-import lab4_3.ForkJoinSame;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
