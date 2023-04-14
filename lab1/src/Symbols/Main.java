@@ -1,3 +1,5 @@
+package Symbols;
+
 public class Main {
     public static void main(String[] args) {
         Runnable runSmbThr = new Runnable() {

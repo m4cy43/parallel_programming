@@ -1,3 +1,5 @@
+package Symbols;
+
 public class ControlledThread extends Thread {
     private String symbol = "";
     private Object syncKey;

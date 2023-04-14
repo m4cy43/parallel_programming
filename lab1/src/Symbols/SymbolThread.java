@@ -1,3 +1,5 @@
+package Symbols;
+
 public class SymbolThread extends Thread {
     private String symbol = "";
     public SymbolThread(String symbol){

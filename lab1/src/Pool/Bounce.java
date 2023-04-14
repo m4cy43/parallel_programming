@@ -1,3 +1,5 @@
+package Pool;
+
 import javax.swing.*;
 
 public class Bounce {

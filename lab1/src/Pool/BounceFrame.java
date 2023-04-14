@@ -1,3 +1,5 @@
+package Pool;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -103,10 +105,25 @@ public class BounceFrame extends JFrame {
                 Runnable run = new Runnable() {
                     @Override
                     public void run() {
+                        BallThread thread = null;
                         for (int i = 0; i < 4; i++) {
                             // blue -> red -> blue -> red
                             Color color = (i % 2 == 0) ? Color.BLUE : Color.RED;
-                            newBallFixed(color, Thread.NORM_PRIORITY, 50, 50, 500);
+                            Ball b = new Ball(canvas, color, 50, 50);
+                            canvas.add(b);
+
+                            if (thread == null) {
+                                thread = new BallThread(b);
+                            }
+                            else {
+                                thread = new BallThread(b, thread);
+                            }
+                            // ball life-time
+                            thread.setIterations(500);
+                            thread.setPriority(Thread.NORM_PRIORITY);
+                            thread.start();
+                            System.out.println("Thread name = " +
+                                    thread.getName());
                         }
                     }
                 };
@@ -145,20 +162,6 @@ public class BounceFrame extends JFrame {
         BallThread thread = new BallThread(b);
         thread.setPriority(prior);
         thread.start();
-        System.out.println("Thread name = " +
-                thread.getName());
-    }
-    public void newBallFixed(Color color, int prior, int x, int y, int iterations) {
-        Ball b = new Ball(canvas, color, x, y);
-        canvas.add(b);
-
-        BallThread thread = new BallThread(b);
-        // ball life-time
-        thread.setIterations(iterations);
-        thread.setPriority(prior);
-        thread.start();
-        // content action solution (join throws InterruptedException)
-        try { thread.join(); } catch (InterruptedException e) { throw new RuntimeException(e); }
         System.out.println("Thread name = " +
                 thread.getName());
     }

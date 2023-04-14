@@ -1,10 +1,17 @@
+package Pool;
+
 public class BallThread extends Thread {
     private Ball b;
     private int maxIterations = 10000;
     private int speed = 5;
+    private BallThread prevBall = null;
 
     public BallThread(Ball ball){
         b = ball;
+    }
+    public BallThread(Ball ball, BallThread prev){
+        b = ball;
+        prevBall = prev;
     }
 
     public int getIterations (){
@@ -26,6 +33,9 @@ public class BallThread extends Thread {
     @Override
     public void run(){
         try{
+            if (prevBall != null){
+                prevBall.join();
+            }
             for(int i=1; i<maxIterations; i++){
                 b.move();
 
