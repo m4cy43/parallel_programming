@@ -1,35 +1,43 @@
-package task1;
+package task2;
 
 import java.util.Random;
 import java.util.concurrent.*;
 
-public class Main {
-    public static final Random rnd = new Random();
-    private static final int AV_PROC = Runtime.getRuntime().availableProcessors();
-    public static void main(String[] args) throws InterruptedException {
-        // thread pool
-        int queueCapacity = 10; // 100
+public class Model implements Runnable
+{
+    private static final Random rnd = new Random();
+    // thread pool
+    private int queueCapacity = 10; // 100
 
-        int corePoolSize = 6; // AV_PROC
-        int maximumPoolSize = 6; // AV_PROC
-        long keepAliveTime = 0L;
+    private int corePoolSize = 6; // AV_PROC
+    private int maximumPoolSize = 6; // AV_PROC
+    private long keepAliveTime = 0L;
 
-        // task processing
-        double numTask = 1000;
-        // simulation of queue movement delay
-        int QdelayOrigin = 1;
-        int QdelayBound = 6; // 10
-        // simulating the delay in task processing
-        int TdelayOrigin = 1;
-        int TdelayBound = 50; // 150
+    // task processing
+    private double numTask = 1000;
+    // simulation of queue movement delay
+    private int QdelayOrigin = 1;
+    private int QdelayBound = 6; // 10
+    // simulating the delay in task processing
+    private int TdelayOrigin = 1;
+    private int TdelayBound = 50; // 150
 
-        // collectable data (print)
-        double queueSize = 0;
-        double exceptedTasks = 0;
+    // collectable data (print)
+    private double queueSize = 0;
+    private double exceptedTasks = 0;
+    private int id;
+    private Result result;
 
+    public Model(int id, Result result) {
+        this.id = id;
+        this.result = result;
+    }
+
+    @Override
+    public void run()
+    {
         // "обмежена черга"
         BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>(queueCapacity);
-        // "пул потоків"
         try (ExecutorService executorService = new ThreadPoolExecutor(
                 corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, workQueue
         )) {
@@ -49,11 +57,9 @@ public class Main {
             }
             executorService.shutdown();
 
-            System.out.printf("Tasks number: %.0f\n", numTask);
-            System.out.printf("Excepted tasks: %.0f\n", exceptedTasks);
-            System.out.printf("Failure prob: %.2f%%\n", exceptedTasks / numTask * 100);
-            System.out.printf("Average queue size: %.2f\n", queueSize / numTask);
-            System.out.printf("Pool - %d | Q capacity - %d | Delay - %d", corePoolSize, queueCapacity, QdelayBound);
+            result.setResult(id, numTask, exceptedTasks, queueSize, corePoolSize, queueCapacity, QdelayBound);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
