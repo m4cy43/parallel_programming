@@ -101,35 +101,26 @@ public class BounceFrame extends JFrame {
         buttonJoin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // interface
-                Runnable run = new Runnable() {
-                    @Override
-                    public void run() {
-                        BallThread thread = null;
-                        for (int i = 0; i < 4; i++) {
-                            // blue -> red -> blue -> red
-                            Color color = (i % 2 == 0) ? Color.BLUE : Color.RED;
-                            Ball b = new Ball(canvas, color, 50, 50);
-                            canvas.add(b);
+                BallThread thread = null;
+                for (int i = 0; i < 4; i++) {
+                    // blue -> red -> blue -> red
+                    Color color = (i % 2 == 0) ? Color.BLUE : Color.RED;
+                    Ball b = new Ball(canvas, color, 50, 50);
+                    canvas.add(b);
 
-                            if (thread == null) {
-                                thread = new BallThread(b);
-                            }
-                            else {
-                                thread = new BallThread(b, thread);
-                            }
-                            // ball life-time
-                            thread.setIterations(500);
-                            thread.setPriority(Thread.NORM_PRIORITY);
-                            thread.start();
-                            System.out.println("Thread name = " +
-                                    thread.getName());
-                        }
+                    if (thread == null) {
+                        thread = new BallThread(b);
                     }
-                };
-                // Thread takes runnable task
-                Thread thread = new Thread(run);
-                thread.start();
+                    else {
+                        thread = new BallThread(b, thread);
+                    }
+                    // ball life-time
+                    thread.setIterations(500);
+                    thread.setPriority(Thread.NORM_PRIORITY);
+                    thread.start();
+                    System.out.println("Thread name = " +
+                            thread.getName());
+                }
             }
         });
 
