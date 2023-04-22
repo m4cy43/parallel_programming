@@ -7,42 +7,56 @@ public class Main {
     public static final Random rnd = new Random();
     private static final int AV_PROC = Runtime.getRuntime().availableProcessors();
     public static void main(String[] args) throws InterruptedException {
-        // thread pool
-        int queueCapacity = 10; // 100
+        int taskNum = 10000;
+        int threadNum1 = 1;
+        int threadNum2 = 12;
 
-        int corePoolSize = 6; // AV_PROC
-        int maximumPoolSize = 6; // AV_PROC
+        long expTime1 = ExperimentLab5(threadNum1, taskNum);
+        long expTime2 = ExperimentLab5(threadNum2, taskNum);
+
+        double Sp = (double) expTime1 / expTime2;
+        double Ep = Sp / threadNum2;
+        double Cp = Sp * threadNum2;
+
+        System.out.printf("SpeedUp(Sp):%f\n", Sp);
+        System.out.printf("Efficiency(Ep):%f\n", Ep);
+        System.out.printf("Cost(Cp):%f\n", Cp);
+    }
+    public static long ExperimentLab5 (int threadNum, int taskNum) throws InterruptedException {
+        // thread pool
+        int queueCapacity = taskNum; // 100
+
+        int corePoolSize = threadNum; // AV_PROC
+        int maximumPoolSize = threadNum; // AV_PROC
         long keepAliveTime = 0L;
 
         // task processing
-        double numTask = 1000;
+        double numTask = taskNum;
         // simulation of queue movement delay
         int QdelayOrigin = 1;
-        int QdelayBound = 6; // 10
+        int QdelayBound = 5; // 10
+        // simulating the delay in task processing
+        int TdelayOrigin = 1;
+        int TdelayBound = 20; // 150
 
         // collectable data (print)
         double queueSize = 0;
         double exceptedTasks = 0;
 
-        // bank task data
-        int N_ACCOUNTS = 1000;
-        int INITIAL_BALANCE = 10000;
         // "обмежена черга"
         BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>(queueCapacity);
         // "пул потоків"
         try (ExecutorService executorService = new ThreadPoolExecutor(
                 corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, workQueue
         )) {
-            Bank b = new Bank(N_ACCOUNTS, INITIAL_BALANCE);
-            numTask = N_ACCOUNTS;
+            long nanotime1 = System.nanoTime();
             for (int i = 0; i < numTask; i++) {
-//                // simulation of queue movement delay
-//                Thread.sleep(rnd.nextInt(QdelayOrigin, QdelayBound));
+                // simulation of queue movement delay
+                Thread.sleep(rnd.nextInt(QdelayOrigin, QdelayBound));
                 try {
                     // "окремі підзадачі"
-                    TransferThread t = new TransferThread(b, i, INITIAL_BALANCE);
-                    t.setPriority(Thread.NORM_PRIORITY + i % 2);
-                    executorService.submit(t);
+                    DelayedTask Task = new DelayedTask(rnd.nextInt(TdelayOrigin, TdelayBound));
+                    executorService.submit(Task);
 
                     queueSize += workQueue.size();
                 } catch (Exception e) {
@@ -51,13 +65,34 @@ public class Main {
                 }
             }
             executorService.shutdown();
+            long nanotime2 = System.nanoTime();
 
-            System.out.printf("Tasks number: %.0f\n", numTask);
-            System.out.printf("Excepted tasks: %.0f\n", exceptedTasks);
-            System.out.printf("Failure prob: %.2f%%\n", exceptedTasks / numTask * 100);
-            System.out.printf("Average queue size: %.2f\n", queueSize / numTask);
-            System.out.printf("Pool - %d | Q capacity - %d", corePoolSize, queueCapacity);
-//            System.out.printf("Pool - %d | Q capacity - %d | Delay - %d", corePoolSize, queueCapacity, QdelayBound);
+            long runtime = (nanotime2 - nanotime1)/1000000;
+            double failure = exceptedTasks / numTask * 100;
+            double avgQueueSize = queueSize / numTask;
+
+            System.out.printf("Tasks:%.0f | Excepted:%.0f | Failure:%.2f%% | Avg q size:%.2f\n",
+                    numTask, exceptedTasks, failure, avgQueueSize);
+            System.out.printf("Runtime:%dms | Pool size:%d | Queue cap:%d | Delay:%d\n\n",
+                    runtime, corePoolSize, queueCapacity, QdelayBound);
+            return runtime;
+        }
+    }
+}
+
+class DelayedTask implements Runnable {
+    private int delay;
+    public DelayedTask(int delay) {
+        this.delay = delay;
+    }
+    @Override
+    public void run() {
+        try
+        {
+            // simulating the delay in task processing
+            Thread.sleep(this.delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
