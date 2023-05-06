@@ -1,6 +1,6 @@
 import mpi.*;
 public class BlockingShare {
-    private static final int SIZE = 750;
+    private static final int SIZE = 1000;
     private static final int MASTER = 0;
     private static final int FROM_MASTER = 1;
     private static final int FROM_WORKER = 2;
@@ -22,7 +22,7 @@ public class BlockingShare {
         }
         
         if (rank == MASTER) {
-            System.out.printf("Blocking\nTask number: %d\n", size);
+            System.out.printf("Matrix size: %d Task number: %d\n", SIZE, size);
             double time1 = System.nanoTime();
             int partOfWork = SIZE / workersNum;
             int extraWork = SIZE % workersNum;
