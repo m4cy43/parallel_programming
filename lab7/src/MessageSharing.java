@@ -2,11 +2,11 @@ import mpi.MPI;
 
 public class MessageSharing {
     public static int MASTER = 0;
-    public static int SIZE = 1000;
+    public static int SIZE = 2000;
     public static boolean drawFlag = false;
     public static void main(String[] args) {
-        double[][] matrixA = Matrix.staticMatrix(SIZE);
-        double[][] matrixB = Matrix.staticMatrix(SIZE);
+        double[][] matrixA = new double[SIZE][SIZE];
+        double[][] matrixB = new double[SIZE][SIZE];
         double[][] resultMatrix = new double[SIZE][SIZE];
         double time1 = 0.0, time2 = 0.0;
 
@@ -18,6 +18,8 @@ public class MessageSharing {
 
         if (rank == MASTER) {
             System.out.printf ("Matrix size:%d Task number:%d\n", SIZE, size);
+            matrixA = Matrix.staticMatrix(SIZE);
+            matrixB = Matrix.staticMatrix(SIZE);
             time1 = System.nanoTime();
         }
 
