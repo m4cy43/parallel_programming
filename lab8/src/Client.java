@@ -1,10 +1,10 @@
 import java.io.*;
 import java.net.*;
 public class Client {
-    private static final int SIZE = 100;
-    private static final int threadsNum = 4;
+    private static final int SIZE = 1000;
+    private static final int threadsNum = 6;
     private static final int PORT = 5000;
-    private static final boolean printFlag = true;
+    private static final boolean printFlag = false;
     public static void main(String[] args) {
         try (
             Socket socket = new Socket("localhost", PORT);
@@ -19,38 +19,28 @@ public class Client {
                     String clientCommand = bufferedReader.readLine();
                     if (clientCommand.equals("s")) {
                         long time1 = System.nanoTime();
-
                         output.writeObject(clientCommand);
                         output.flush();
-
                         output.writeObject(SIZE);
                         output.flush();
-
                         output.writeObject(threadsNum);
                         output.flush();
-
                         response(time1, input);
                     }
                     if (clientCommand.equals("c")) {
-                        double[][] matrixA = Generation.lineElement(SIZE);
-                        double[][] matrixB = Generation.identity(SIZE);
+                        double[][] matrixA = Generation.identicalRows(SIZE);
+                        double[][] matrixB = Generation.mainDiagonal(SIZE);
                         long time1 = System.nanoTime();
-
                         output.writeObject(clientCommand);
                         output.flush();
-
                         output.writeObject(SIZE);
                         output.flush();
-
                         output.writeObject(threadsNum);
                         output.flush();
-
                         output.writeObject(matrixA);
                         output.flush();
-
                         output.writeObject(matrixB);
                         output.flush();
-
                         response(time1, input);
                     }
                     System.out.println();

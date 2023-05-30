@@ -1,6 +1,6 @@
 import mpi.*;
 public class BlockingShare {
-    private static final int SIZE = 1000;
+    private static final int SIZE = 2000;
     private static final int MASTER = 0;
     private static final int FROM_MASTER = 1;
     private static final int FROM_WORKER = 2;

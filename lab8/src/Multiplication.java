@@ -16,8 +16,8 @@ public class Multiplication {
         int firstRow = 0;
         for (int i = 0; i < threadsNum; i++) {
             int lastRow = firstRow + threadRows;
-            if (lastRow > rows) {
-                lastRow = rows;
+            if (i == threadsNum - 1) {
+                lastRow += rows - threadRows;
             }
             threads[i] = new Thread(
                 new MultiplicationThread(matrixA, matrixB, result, firstRow, lastRow)

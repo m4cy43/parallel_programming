@@ -11,7 +11,7 @@ public class MultiplicationThread implements Runnable {
         this.firstIndex = firstIndex;
         this.lastIndex = lastIndex;
     }
-    private void calculateRow(int row) {
+    private void calculate(int row) {
         for (int col = 0; col < matrixB[0].length; col++) {
             for (int i = 0; i < matrixB.length; i++) {
                 result[row][col] += matrixA[row][i] * matrixB[i][col];
@@ -21,7 +21,7 @@ public class MultiplicationThread implements Runnable {
     @Override
     public void run() {
         for (int i = firstIndex; i < lastIndex; i++) {
-            calculateRow(i);
+            calculate(i);
         }
     }
 }
